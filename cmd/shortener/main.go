@@ -5,6 +5,7 @@ import (
 
 	"github.com/SysoevAndrey/shortener/internal/handler"
 	"github.com/SysoevAndrey/shortener/internal/repository"
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
@@ -16,10 +17,10 @@ func main() {
 func run() error {
 	s := repository.NewMemStorage()
 	h := handler.NewShortenerHandler(s)
+	r := chi.NewRouter()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("POST /", h.Add)
-	mux.HandleFunc("GET /{id}", h.Get)
+	r.Post("/", h.Add)
+	r.Get("/{id}", h.Get)
 
-	return http.ListenAndServe(`:8080`, mux)
+	return http.ListenAndServe(`:8080`, r)
 }

@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/SysoevAndrey/shortener/internal/service"
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -70,9 +71,11 @@ func Test_shortenerHandler_Add(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			request := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(tt.url))
 			w := httptest.NewRecorder()
+			r := chi.NewRouter()
 			h := NewShortenerHandler(tt.storage)
 
-			h.Add(w, request)
+			r.Post("/", h.Add)
+			r.ServeHTTP(w, request)
 			res := w.Result()
 
 			assert.Equal(t, tt.code, res.StatusCode)
@@ -107,13 +110,14 @@ func Test_shortenerHandler_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			request := httptest.NewRequest(http.MethodGet, "/", nil)
-			request.SetPathValue("id", tt.id)
+			request := httptest.NewRequest(http.MethodGet, "/"+tt.id, nil)
 
 			w := httptest.NewRecorder()
+			r := chi.NewRouter()
 			h := NewShortenerHandler(tt.storage)
 
-			h.Get(w, request)
+			r.Get("/{id}", h.Get)
+			r.ServeHTTP(w, request)
 			res := w.Result()
 
 			assert.Equal(t, tt.want.code, res.StatusCode)

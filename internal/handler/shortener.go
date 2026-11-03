@@ -4,6 +4,8 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type shortenerHandler struct {
@@ -48,7 +50,7 @@ func (h *shortenerHandler) Add(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *shortenerHandler) Get(w http.ResponseWriter, r *http.Request) {
-	id := r.PathValue("id")
+	id := chi.URLParam(r, "id")
 	url, ok := h.storage.Get(id)
 	if !ok {
 		w.WriteHeader(http.StatusNotFound)
