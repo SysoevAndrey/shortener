@@ -22,6 +22,10 @@ func newStorage() *storage {
 	}
 }
 
+const (
+	host = "http://localhost:8080"
+)
+
 func (s *storage) Set(url string) (string, error) {
 	id := service.GetHash(url)
 	if _, exists := s.urls[id]; exists {
@@ -72,7 +76,7 @@ func Test_shortenerHandler_Add(t *testing.T) {
 			request := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(tt.url))
 			w := httptest.NewRecorder()
 			r := chi.NewRouter()
-			h := NewShortenerHandler(tt.storage)
+			h := NewShortenerHandler(tt.storage, host)
 
 			r.Post("/", h.Add)
 			r.ServeHTTP(w, request)
@@ -114,7 +118,7 @@ func Test_shortenerHandler_Get(t *testing.T) {
 
 			w := httptest.NewRecorder()
 			r := chi.NewRouter()
-			h := NewShortenerHandler(tt.storage)
+			h := NewShortenerHandler(tt.storage, host)
 
 			r.Get("/{id}", h.Get)
 			r.ServeHTTP(w, request)

@@ -10,11 +10,13 @@ import (
 
 type shortenerHandler struct {
 	storage URLStorage
+	host    string
 }
 
-func NewShortenerHandler(storage URLStorage) *shortenerHandler {
+func NewShortenerHandler(storage URLStorage, host string) *shortenerHandler {
 	return &shortenerHandler{
 		storage: storage,
+		host:    host,
 	}
 }
 
@@ -46,7 +48,7 @@ func (h *shortenerHandler) Add(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte("http://localhost:8080/" + hash))
+	w.Write([]byte(h.host + "/" + hash))
 }
 
 func (h *shortenerHandler) Get(w http.ResponseWriter, r *http.Request) {
