@@ -34,6 +34,7 @@ func run() error {
 
 	r.Use(middleware.WithLogging)
 	r.Post("/", h.Add)
+	r.Post("/api/shorten", h.Shorten)
 	r.Get("/{id}", h.Get)
 
 	address := config.Config.Address
