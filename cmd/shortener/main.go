@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/SysoevAndrey/shortener/internal/config"
@@ -11,7 +12,10 @@ import (
 )
 
 func main() {
-	config.ParseFlags()
+	if err := config.ParseFlags(); err != nil {
+		log.Fatal(err)
+	}
+
 	if err := run(); err != nil {
 		panic(err)
 	}
