@@ -10,11 +10,13 @@ import (
 var Config struct {
 	Address     string `env:"SERVER_ADDRESS"`
 	BaseAddress string `env:"BASE_URL"`
+	LogLevel    string `env:"LOG_LEVEL"`
 }
 
 func ParseFlags() error {
 	flag.StringVar(&Config.Address, "a", "localhost:8080", "input host")
 	flag.StringVar(&Config.BaseAddress, "b", "localhost:8080", "output host")
+	flag.StringVar(&Config.LogLevel, "l", "info", "log level")
 	flag.Parse()
 
 	if err := env.Parse(&Config); err != nil {
@@ -22,7 +24,6 @@ func ParseFlags() error {
 	}
 
 	Config.BaseAddress = normalizeHost(Config.BaseAddress)
-
 	return nil
 }
 
