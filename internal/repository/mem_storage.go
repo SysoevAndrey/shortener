@@ -21,11 +21,11 @@ func NewMemStorage() *memStorage {
 func (s *memStorage) Set(url string) (string, error) {
 	h := service.GetHash(url)
 	s.mu.Lock()
+	defer s.mu.Unlock()
 	if _, exists := s.urls[h]; exists {
 		return "", errors.New("url already exists")
 	}
 	s.urls[h] = url
-	s.mu.Unlock()
 	return h, nil
 }
 

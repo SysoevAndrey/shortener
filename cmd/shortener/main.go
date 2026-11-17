@@ -33,6 +33,8 @@ func run() error {
 	r := chi.NewRouter()
 
 	r.Use(middleware.WithLogging)
+	r.Use(middleware.WithCompression)
+
 	r.Post("/", h.Add)
 	r.Post("/api/shorten", h.Shorten)
 	r.Get("/{id}", h.Get)
